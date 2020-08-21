@@ -1,7 +1,7 @@
 require "spooky/version"
 
+require "spooky/is_resource"
 require "spooky/client"
-require "spooky/base"
 require "spooky/post"
-require "spooky/user"
-require "spooky/tags"
+require "spooky/author"
+require "spooky/tag"

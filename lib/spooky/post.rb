@@ -1,37 +1,58 @@
 module Spooky
-  class Post < Spooky::Base
-    attr_reader :title, :markdown, :html, :image, :featured, :page, :status,
-                :language, :published_at, :published_by, :author, :url, :tags
+  class Post
+    ATTRIBUTES = [
+      "authors",
+      "canonical_url",
+      "codeinjection_foot",
+      "codeinjection_head",
+      "comment_id",
+      "created_at",
+      "custom_excerpt",
+      "custom_template",
+      "email_subject",
+      "excerpt",
+      "feature_image",
+      "featured",
+      "html",
+      "id",
+      "meta_description",
+      "meta_title",
+      "og_description",
+      "og_image",
+      "og_title",
+      "primary_author",
+      "primary_tag",
+      "published_at",
+      "reading_time",
+      "send_email_when_published",
+      "slug",
+      "tags",
+      "title",
+      "twitter_description",
+      "twitter_image",
+      "twitter_title",
+      "updated_at",
+      "url",
+      "uuid",
+      "visibility"
+    ].freeze
 
-    def initialize(attrs = {})
-      @title = attrs["title"]
-      @markdown = attrs["markdown"]
-      @html = attrs["html"]
-      @image = attrs["image"]
-      @featured = attrs["featured"]
-      @page = attrs["page"]
-      @status = attrs["status"]
-      @language = attrs["language"]
-      publish_attrs(attrs)
+    include IsResource
 
-      super(attrs)
-    end
+    def parse_attributes(attrs)
+      author = attrs["primary_author"]
+      @primary_author = author.present? && Spooky::Author.new(author)
 
-    # Instance methods.
-    def display_title
-      !meta_title.blank? ? meta_title : title
-    end
+      @authors = (attrs["authors"] || []).map do |author|
+        Spooky::Author.new(author)
+      end
 
-    private
+      tag = attrs["primary_tag"]
+      @primary_tag = tag.present? && Spooky::Tag.new(tag)
 
-    def publish_attrs(attrs)
-      @published_at = DateTime.iso8601(attrs["published_at"])
-      @published_by = attrs["published_by"]
-      @url = attrs["url"]
-      author = attrs["author"]
-      @author = author.is_a?(Hash) ? Spooky::User.new(author) : author
-      tags = attrs["tags"]
-      @tags = tags && !tags.empty? ? tags.map { |t| Spooky::Tag.new(t) } : tags
+      @tags = (attrs["tags"] || []).map do |tag|
+        Spooky::Tag.new(tag)
+      end
     end
   end
 end

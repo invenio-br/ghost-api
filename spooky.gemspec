@@ -1,17 +1,16 @@
-# coding: utf-8
-lib = File.expand_path("../lib", __FILE__)
+lib = File.expand_path("lib", __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "spooky/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "spooky"
   spec.version       = Spooky::VERSION
-  spec.authors       = ["Ritchie Blair"]
-  spec.email         = ["ritchie@infinityrobot.com"]
+  spec.authors       = ["Georges Gabereau"]
+  spec.email         = ["georges@togethr.app"]
 
-  spec.summary       = "A simple Ruby wrapper for the Ghost blog public API."
-  spec.description   = "Access the Ghost blog public API via Ruby."
-  spec.homepage      = "https://github.com/infinityrobot/spooky"
+  spec.summary       = "A simple Ruby wrapper for the Ghost Content API."
+  spec.description   = "Access the Ghost Content API via Ruby."
+  spec.homepage      = "https://github.com/togethr/spooky"
   spec.license       = "MIT"
 
   file_match = %r{^(test|spec|features)/}
@@ -20,11 +19,12 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_runtime_dependency "httparty", "~> 0.13"
-  spec.add_runtime_dependency "activesupport", "~> 4.2"
+  spec.add_runtime_dependency "activesupport", "~> 6.0"
+  spec.add_runtime_dependency "http", "~> 4.0"
 
-  spec.add_development_dependency "bundler", "~> 1.12"
-  spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "rspec", "~> 3.0"
-  spec.add_development_dependency "dotenv", "~> 2.1"
+  spec.add_development_dependency "bundler", "~> 2.0"
+  spec.add_development_dependency "dotenv", "~> 2.7"
+  spec.add_development_dependency "rake", "~> 13.0"
+  spec.add_development_dependency "rspec", "~> 3.9"
+  spec.add_development_dependency "rubocop", "~> 0.89.0"
 end
