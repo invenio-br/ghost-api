@@ -8,14 +8,28 @@ describe Spooky::Post do
     response = double("A parsed response", parse: FIXTURES[:simple_posts])
     allow(HTTP).to receive(:get).and_return(response)
 
-    expect(client.posts.all? { |p| p.is_a?(Spooky::Post) }).to be(true)
+    posts, _ = client.posts
+
+    expect(posts.all? { |p| p.is_a?(Spooky::Post) }).to be(true)
+  end
+
+  it "returns the pagination information with a browse request" do
+    response = double("A parsed response", parse: FIXTURES[:simple_posts])
+    allow(HTTP).to receive(:get).and_return(response)
+
+    _, pagination = client.posts
+
+    expect(pagination).to be_present
+    expect(pagination.keys).to include("page", "limit", "pages", "total")
   end
 
   it "converts nested tags to Spooky::Tag" do
     response = double("A parsed response", parse: FIXTURES[:posts_with_tags])
     allow(HTTP).to receive(:get).and_return(response)
 
-    post = client.posts(tags: true).first
+    posts, _ = client.posts(tags: true)
+    post = posts.first
+
     expect(post.primary_tag.is_a?(Spooky::Tag)).to be(true)
     expect(post.tags.all? { |p| p.is_a?(Spooky::Tag) }).to be(true)
   end
@@ -24,7 +38,9 @@ describe Spooky::Post do
     response = double("A parsed response", parse: FIXTURES[:posts_with_authors])
     allow(HTTP).to receive(:get).and_return(response)
 
-    post = client.posts(authors: true).first
+    posts, _ = client.posts(authors: true)
+    post = posts.first
+
     expect(post.primary_author.is_a?(Spooky::Author)).to be(true)
     expect(post.authors.all? { |p| p.is_a?(Spooky::Author) }).to be(true)
   end

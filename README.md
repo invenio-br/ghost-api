@@ -47,33 +47,66 @@ client = Spooky::Client.new
 ```
 ### Fetching Posts
 
-Spooky operates primarily on posts.
+Spooky operates primarily on posts. Methods that return a collection also return a pagination object, if there is one.
 
 #### Get all posts
-`posts = client.posts`
+```ruby
+posts, pagination = client.posts
+```
 
-Returns an array of `Spooky::Post`s.
+Returns an array of `Spooky::Post`s and a pagination meta hash.
 
 #### Get all posts and include tags and authors
-`posts = client.posts(tags: true, authors: true)`
+```ruby
+posts, pagination = client.posts(tags: true, authors: true)
+```
 
-Returns an array of `Spooky::Post`s with `Spooky::Tag`s and `Spooky::Author`s where appropriate.
+Returns an array of `Spooky::Post`s with `Spooky::Tag`s and `Spooky::Author`s where appropriate and a pagination meta hash.
 
 #### Get a post by ID or slug
 
-`post = client.post_by(id: 'abc123')`
+```ruby
+post = client.post_by(id: 'abc123')
+```
 
-`post = client.post_by(slug: 'this-is-a-slug')`
+```ruby
+post = client.post_by(slug: 'this-is-a-slug')
+```
 
 Both return a `Spooky::Post`.
 
 #### Get posts with a filter applied
 
-Filtering accepts simple hashes as conditions or NQL strings for more complex filters.
+Filtering accepts simple hashes as conditions or [NQL strings for more complex filters](https://ghost.org/docs/api/v3/content/#syntax-reference).
 
-`featured_posts = client.posts(filter: { featured: true })`
+```ruby
+featured_posts, pagination = client.posts(filter: { featured: true })
+```
 
-`welcome_posts = client.posts(filter: "title:Welcome")`
+```ruby
+welcome_posts, pagination = client.posts(filter: "title:Welcome")
+```
+
+You can exclude a post using NQL operators, note the `-`:
+
+```ruby
+posts_without_welcome, pagination = client.posts(tags: true, filter: "title:-Welcome")
+```
+
+### Pagination
+
+If applicable, Spooky will return the pagination meta hash directly from Ghost. It looks like this:
+
+```ruby
+{
+    "page" => 1,
+    "limit" => 3,
+    "pages" => 3,
+    "total" => 7,
+    "next" => 2,
+    "prev" => nil
+}
+```
 
 ## Development
 

@@ -21,20 +21,23 @@ module Spooky
         @error = response["errors"]
         false
       else
-        response[resource.split("/").first]
+        collection = response[resource.split("/").first]
+        pagination = response.dig("meta", "pagination")
+
+        [collection, pagination]
       end
     end
 
     def fetch(resource, options = {})
       resource_name = resource.split("/").first
-      response = fetch_json(resource, options)
+      response, pagination = fetch_json(resource, options)
 
       resource_class = "Spooky::#{resource_name.singularize.classify}".constantize
 
-      response.present? && response.map { |attrs| resource_class.send(:new, attrs) }
+      response.present? && [response.map { |attrs| resource_class.send(:new, attrs) }, pagination]
     end
 
-    def posts(tags: false, authors: false, filter: false)
+    def posts(tags: false, authors: false, filter: false, page: false, limit: false)
       inc = []
       inc << "tags" if tags
       inc << "authors" if authors
@@ -42,13 +45,8 @@ module Spooky
       options = {}
       options[:include] = inc if inc.present?
 
-      if filter.present?
-        if filter.is_a?(Hash)
-          options[:filter] = filter.map { |k, v| "#{k}:#{v}" }.join
-        else
-          options[:filter] = filter
-        end
-      end
+      options = apply_filter(options, filter)
+      options = apply_pagination(options, { page: page, limit: limit })
 
       fetch("posts", options)
     end
@@ -62,14 +60,35 @@ module Spooky
       options[:include] = inc if inc.present?
 
       if id.present?
-        response = fetch("posts/#{id}", options)
+        response, _ = fetch("posts/#{id}", options)
         response.present? && response.first
       elsif slug.present?
-        response = fetch("posts/slug/#{slug}", options)
+        response, _ = fetch("posts/slug/#{slug}", options)
         response.present? && response.first
       else
         false
       end
+    end
+
+    private
+
+    def apply_filter(options, filter)
+      if filter.present?
+        if filter.is_a?(Hash)
+          options[:filter] = filter.map { |k, v| "#{k}:#{v}" }.join("+")
+        else
+          options[:filter] = filter
+        end
+      end
+
+      options
+    end
+
+    def apply_pagination(options, pagination)
+      options[:page] = pagination[:page] if pagination[:page]
+      options[:limit] = pagination[:limit] if pagination[:limit]
+
+      options
     end
   end
 end

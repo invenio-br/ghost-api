@@ -68,7 +68,17 @@ FIXTURES = {
           "meta_description": null,
           "email_subject": null
         }
-      ]}
+      ],
+        "meta": {
+          "pagination": {
+            "page": 1,
+            "limit": 15,
+            "pages": 1,
+            "total": 8,
+            "next": null,
+            "prev": null
+          }
+        }}
     POST
   ),
   posts_with_tags: JSON.parse(
