@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/togethr/spooky"
   spec.license       = "MIT"
 
-  file_match = %r{^(test|spec|features|.gem$)/}
+  file_match = %r{^(test|spec|features)/}
   spec.files = `git ls-files -z`.split("\x0").reject { |f| f.match(file_match) }
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
