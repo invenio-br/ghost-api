@@ -89,3 +89,7 @@ This project adheres to the included Code of Conduct, see CODE_OF_CONDUCT.
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+
+## Credits
+
+This gem was originally developed by [infinityrobot](https://github.com/infinityrobot).
