@@ -37,13 +37,9 @@ module Spooky
       response.present? && [response.map { |attrs| resource_class.send(:new, attrs) }, pagination]
     end
 
-    def posts(tags: false, authors: false, filter: false, page: false, limit: false)
-      inc = []
-      inc << "tags" if tags
-      inc << "authors" if authors
-
+    def posts(include: [], filter: false, page: false, limit: false)
       options = {}
-      options[:include] = inc if inc.present?
+      options[:include] = include
 
       options = apply_filter(options, filter)
       options = apply_pagination(options, { page: page, limit: limit })
