@@ -1,6 +1,7 @@
 module Spooky
   class Tag
     ATTRIBUTES = [
+      "accent_color",
       "description",
       "feature_image",
       "id",
