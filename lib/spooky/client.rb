@@ -9,7 +9,7 @@ module Spooky
     def initialize(attrs = {})
       @api_url = ENV["GHOST_API_URL"] || attrs[:api_url]
       @api_key = ENV["GHOST_CONTENT_API_KEY"] || attrs[:api_key]
-      @endpoint = "#{@api_url}/ghost/api/v3/content"
+      @endpoint = "#{@api_url}/ghost/api/content"
     end
 
     def fetch_json(resource, options = {})
