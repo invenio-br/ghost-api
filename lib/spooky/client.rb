@@ -71,13 +71,9 @@ module Spooky
       fetch("posts", options)
     end
 
-    def post_by(id: nil, slug: nil, tags: false, authors: false)
-      inc = []
-      inc << "tags" if tags
-      inc << "authors" if authors
-
+    def post_by(id: nil, slug: nil, include: [])
       options = {}
-      options[:include] = inc if inc.present?
+      options[:include] = include
 
       if id.present?
         response, _ = fetch("posts/#{id}", options)
