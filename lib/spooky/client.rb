@@ -37,6 +37,30 @@ module Spooky
       response.present? && [response.map { |attrs| resource_class.send(:new, attrs) }, pagination]
     end
 
+    def pages(include: [], filter: false, page: false, limit: false)
+      options = {}
+      options[:include] = include
+
+      options = apply_filter(options, filter)
+      options = apply_pagination(options, { page: page, limit: limit })
+
+      fetch("pages", options)
+    end
+
+    def page_by(id: nil, slug: nil)
+      options = {}
+
+      if id.present?
+        response, _ = fetch("pages/#{id}", options)
+        response.present? && response.first
+      elsif slug.present?
+        response, _ = fetch("pages/slug/#{slug}", options)
+        response.present? && response.first
+      else
+        false
+      end
+    end
+
     def posts(include: [], filter: false, page: false, limit: false)
       options = {}
       options[:include] = include
